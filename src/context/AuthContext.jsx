@@ -10,22 +10,27 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
-    
+
     if (token && userData) {
-      setUser(JSON.parse(userData));
+      try {
+        setUser(JSON.parse(userData));
+      } catch {
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+      }
     }
     setLoading(false);
   }, []);
 
-  const login = async (credentials) => {
-    const response = await authService.login(credentials);
-    setUser(response.user);
+  const login = async (credentials, type = 'user') => {
+    const response = await authService.login(credentials, type);
+    const userData = authService.getUser();
+    setUser(userData);
     return response;
   };
 
   const register = async (userData) => {
     const response = await authService.register(userData);
-    setUser(response.user);
     return response;
   };
 

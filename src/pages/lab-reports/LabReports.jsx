@@ -1,11 +1,14 @@
-import React from 'react';
+import { useFetch } from '../../hooks/useFetch';
+import { labReportApi } from '../../api/labReportApi';
 
 const LabReports = () => {
-  const reports = [
-    { id: 'LR-01', farmerName: 'Ramesh Patil', village: 'Molkhi', sampleDate: '10-12', status: 'Completed' },
-    { id: 'LR-02', farmerName: 'Michael Kunal', village: 'Boro', sampleDate: '09-12', status: 'Pending' },
-    { id: 'LR-03', farmerName: 'Jane Doe', village: 'Rammati', sampleDate: '08-12', status: 'Completed' }
-  ];
+  const { data: reports, loading } = useFetch(() => labReportApi.getAllReports());
+
+  if (loading) {
+    return <div className="loading"><div className="spinner"></div></div>;
+  }
+
+  const reportsData = reports || [];
 
   return (
     <div>
@@ -29,26 +32,31 @@ const LabReports = () => {
             </tr>
           </thead>
           <tbody>
-            {reports.map((report) => (
-              <tr key={report.id}>
-                <td>{report.id}</td>
-                <td>{report.farmerName}</td>
-                <td>{report.village}</td>
-                <td>{report.sampleDate}</td>
-                <td>
-                  <span className={`status-badge ${report.status === 'Completed' ? 'delivered' : 'pending'}`}>
-                    {report.status}
-                  </span>
-                </td>
-                <td>
-                  <div className="action-buttons">
-                    <button className="btn-icon" title="View">👁️</button>
-                    <button className="btn-icon" title="Download">⬇️</button>
-                    <button className="btn-icon" title="Delete">🗑️</button>
-                  </div>
-                </td>
+            {reportsData.length > 0 ? (
+              reportsData.map((report) => (
+                <tr key={report.id}>
+                  <td>LR_{report.id}</td>
+                  <td>{report.farmerName}</td>
+                  <td>{report.village || 'N/A'}</td>
+                  <td>{new Date(report.sampleDate).toLocaleDateString()}</td>
+                  <td>
+                    <span className={`status-badge ${report.status === 'COMPLETED' ? 'delivered' : 'pending'}`}>
+                      {report.status}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="action-buttons">
+                      <button className="btn-icon" title="View">👁️</button>
+                      <button className="btn-icon" title="Download">⬇️</button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>No lab reports found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

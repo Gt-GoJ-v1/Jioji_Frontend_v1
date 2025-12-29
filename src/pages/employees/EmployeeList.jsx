@@ -12,9 +12,14 @@ const EmployeeList = () => {
     if (window.confirm('Are you sure you want to delete this employee?')) {
       try {
         await adminApi.deleteEmployee(id);
-        setData(employees.filter(emp => emp.id !== id));
+        if (employees && employees.content) {
+          setData({
+            ...employees,
+            content: employees.content.filter(emp => emp.userId !== id)
+          });
+        }
       } catch (error) {
-        alert('Failed to delete employee');
+        alert('Failed to delete employee: ' + error.message);
       }
     }
   };
@@ -28,11 +33,7 @@ const EmployeeList = () => {
     return <div className="loading"><div className="spinner"></div></div>;
   }
 
-  const employeeData = employees || [
-    { id: 1, name: 'Devika', role: 'Admin', email: 'devika@mail.com', status: 'Active', department: 'IT' },
-    { id: 2, name: 'Sunil', role: 'Manager', email: 'sunil@mail.com', status: 'Active', department: 'Sales' },
-    { id: 3, name: 'Mohini', role: 'Staff', email: 'mohini@mail.com', status: 'Pending', department: 'HR' }
-  ];
+  const employeeData = employees?.content || [];
 
   return (
     <div>
@@ -48,41 +49,47 @@ const EmployeeList = () => {
         <table>
           <thead>
             <tr>
-              <th>Name</th>
+              <th>User ID</th>
               <th>Role</th>
-              <th>Email</th>
-              <th>Department</th>
+              <th>Email/Username</th>
+              <th>Mobile</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {employeeData.map((employee) => (
-              <tr key={employee.id}>
-                <td>{employee.name}</td>
-                <td>{employee.role}</td>
-                <td>{employee.email}</td>
-                <td>{employee.department}</td>
-                <td>
-                  <span className={`status-badge ${employee.status.toLowerCase()}`}>
-                    {employee.status}
-                  </span>
-                </td>
-                <td>
-                  <div className="action-buttons">
-                    <button className="btn-icon" onClick={() => handleViewDetails(employee)} title="View">
-                      👁️
-                    </button>
-                    <Link to={`/admin/employees/edit/${employee.id}`} className="btn-icon" title="Edit">
-                      ✏️
-                    </Link>
-                    <button className="btn-icon" onClick={() => handleDelete(employee.id)} title="Delete">
-                      🗑️
-                    </button>
-                  </div>
-                </td>
+            {employeeData.length > 0 ? (
+              employeeData.map((employee) => (
+                <tr key={employee.userId}>
+                  <td>EMP_{employee.userId}</td>
+                  <td>{employee.role}</td>
+                  <td>{employee.email}</td>
+                  <td>{employee.mobileNumber}</td>
+                  <td>
+                    <span className="status-badge active">
+                      Active
+                    </span>
+                  </td>
+                  <td>
+                    <div className="action-buttons">
+                      <button className="btn-icon" onClick={() => handleViewDetails(employee)} title="View">
+                        👁️
+                      </button>
+                      <Link to={`/admin/employees/edit/${employee.userId}`} className="btn-icon" title="Edit">
+                        ✏️
+                      </Link>
+                      <button className="btn-icon" onClick={() => handleDelete(employee.userId)} title="Delete">
+                        🗑️
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>No employees found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
@@ -95,37 +102,31 @@ const EmployeeList = () => {
               <button className="close-btn" onClick={() => setShowModal(false)}>×</button>
             </div>
             <div className="modal-body">
-              <div style={{textAlign: 'center', marginBottom: '20px'}}>
-                <div style={{width: '80px', height: '80px', borderRadius: '50%', background: '#ddd', margin: '0 auto 10px', overflow: 'hidden'}}>
-                  <img src="/avatar-placeholder.png" alt="Employee" style={{width: '100%', height: '100%'}} />
+              <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: '#ddd', margin: '0 auto 10px', overflow: 'hidden' }}>
+                  <img src="https://ui-avatars.com/api/?name=Employee&background=random" alt="Employee" style={{ width: '100%', height: '100%' }} />
                 </div>
-                <h3>{selectedEmployee.name}</h3>
-                <p style={{color: '#666'}}>{selectedEmployee.role}</p>
+                <h3>{selectedEmployee.email}</h3>
+                <p style={{ color: '#666' }}>{selectedEmployee.role}</p>
               </div>
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px'}}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
                 <div>
-                  <strong>Email:</strong><br/>{selectedEmployee.email}
+                  <strong>Email/Username:</strong><br />{selectedEmployee.email}
                 </div>
                 <div>
-                  <strong>Phone Number:</strong><br/>+1234567890
+                  <strong>Phone Number:</strong><br />{selectedEmployee.mobileNumber}
                 </div>
                 <div>
-                  <strong>User Type:</strong><br/>{selectedEmployee.role}
+                  <strong>User Type:</strong><br />{selectedEmployee.role}
                 </div>
                 <div>
-                  <strong>User ID:</strong><br/>EMP_{selectedEmployee.id}
+                  <strong>Database ID:</strong><br />{selectedEmployee.userId}
                 </div>
                 <div>
-                  <strong>Working State:</strong><br/>Maharashtra
+                  <strong>Employee ID:</strong><br />{selectedEmployee.employeeId || 'N/A'}
                 </div>
                 <div>
-                  <strong>Employee ID:</strong><br/>E-{selectedEmployee.id.toString().padStart(6, '0')}
-                </div>
-                <div>
-                  <strong>User Status:</strong><br/>{selectedEmployee.status}
-                </div>
-                <div>
-                  <strong>Department:</strong><br/>{selectedEmployee.department}
+                  <strong>Account Status:</strong><br />Active
                 </div>
               </div>
             </div>

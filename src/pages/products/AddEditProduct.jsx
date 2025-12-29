@@ -7,11 +7,13 @@ const AddEditProduct = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     productName: '',
-    productCode: '',
-    discountCategory: '',
+    productType: 'SEED',
     category: '',
-    mrp: '',
-    stock: ''
+    breed: '',
+    description: '',
+    price: '',
+    stockQuantity: '',
+    active: true
   });
   const [loading, setLoading] = useState(false);
 
@@ -23,17 +25,24 @@ const AddEditProduct = () => {
 
   const loadProduct = async () => {
     try {
-      const data = await productApi.getProductById(id);
-      setFormData(data);
+      const response = await productApi.getProductById(id);
+      if (response) {
+        setFormData({
+          ...response,
+          price: response.price?.toString() || '',
+          stockQuantity: response.stockQuantity?.toString() || ''
+        });
+      }
     } catch (error) {
       alert('Failed to load product');
     }
   };
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: type === 'checkbox' ? checked : value
     });
   };
 
@@ -41,15 +50,21 @@ const AddEditProduct = () => {
     e.preventDefault();
     setLoading(true);
 
+    const payload = {
+      ...formData,
+      price: parseFloat(formData.price),
+      stockQuantity: parseInt(formData.stockQuantity)
+    };
+
     try {
       if (id) {
-        await productApi.updateProduct(id, formData);
+        await productApi.updateProduct(id, payload);
       } else {
-        await productApi.createProduct(formData);
+        await productApi.createProduct(payload);
       }
       navigate('/admin/products');
     } catch (error) {
-      alert('Failed to save product');
+      alert(error.message || 'Failed to save product');
     } finally {
       setLoading(false);
     }
@@ -57,15 +72,15 @@ const AddEditProduct = () => {
 
   return (
     <div className="table-container">
-      <div className="modal-header" style={{padding: '20px', borderBottom: '1px solid #eee'}}>
+      <div className="modal-header" style={{ padding: '20px', borderBottom: '1px solid #eee' }}>
         <h2>{id ? 'Edit Product' : 'Add New Product'}</h2>
       </div>
 
-      <div style={{padding: '20px'}}>
+      <div style={{ padding: '20px' }}>
         <form onSubmit={handleSubmit}>
           <div className="form-row">
             <div className="form-group">
-              <label>Product Food</label>
+              <label>Product Name</label>
               <input
                 type="text"
                 name="productName"
@@ -77,49 +92,48 @@ const AddEditProduct = () => {
             </div>
 
             <div className="form-group">
-              <label>Category</label>
-              <select name="category" value={formData.category} onChange={handleChange} required>
-                <option value="">Select category</option>
-                <option value="Seed">Seed</option>
-                <option value="Grain">Grain</option>
-                <option value="Vegetable">Vegetable</option>
-                <option value="Fruit">Fruit</option>
+              <label>Product Type</label>
+              <select name="productType" value={formData.productType} onChange={handleChange} required>
+                <option value="SEED">SEED</option>
+                <option value="FERTILIZER">FERTILIZER</option>
+                <option value="ACCESSORY">ACCESSORY</option>
+                <option value="ANIMAL">ANIMAL</option>
               </select>
             </div>
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Product Code</label>
+              <label>Category</label>
               <input
                 type="text"
-                name="productCode"
-                value={formData.productCode}
+                name="category"
+                value={formData.category}
                 onChange={handleChange}
-                placeholder="Enter product code"
+                placeholder="Enter category"
                 required
               />
             </div>
 
             <div className="form-group">
-              <label>Discount Category</label>
+              <label>Breed (Optional)</label>
               <input
                 type="text"
-                name="discountCategory"
-                value={formData.discountCategory}
+                name="breed"
+                value={formData.breed}
                 onChange={handleChange}
-                placeholder="Enter discount"
+                placeholder="Enter breed"
               />
             </div>
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>MRP</label>
+              <label>Price (₹)</label>
               <input
                 type="number"
-                name="mrp"
-                value={formData.mrp}
+                name="price"
+                value={formData.price}
                 onChange={handleChange}
                 placeholder="Enter price"
                 required
@@ -127,28 +141,41 @@ const AddEditProduct = () => {
             </div>
 
             <div className="form-group">
-              <label>Stock</label>
-              <select name="stock" value={formData.stock} onChange={handleChange} required>
-                <option value="">Select stock status</option>
-                <option value="In Stock">In Stock</option>
-                <option value="Out of Stock">Out of Stock</option>
-                <option value="Limited">Limited</option>
-              </select>
+              <label>Stock Quantity</label>
+              <input
+                type="number"
+                name="stockQuantity"
+                value={formData.stockQuantity}
+                onChange={handleChange}
+                placeholder="Enter stock quantity"
+                required
+              />
             </div>
           </div>
 
           <div className="form-group">
-            <label>Upload Image</label>
-            <div className="file-upload">
-              <p>📁 Upload</p>
-              <input type="file" accept="image/*" style={{display: 'none'}} id="productImage" />
-              <label htmlFor="productImage" style={{cursor: 'pointer', color: '#7B1FA2'}}>
-                Choose file or drag & drop here
-              </label>
-            </div>
+            <label>Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Enter product description"
+              style={{ width: '100%', padding: '10px', borderRadius: '4px', border: '1px solid #ddd', minHeight: '100px' }}
+            />
           </div>
 
-          <div style={{display: 'flex', gap: '10px', justifyContent: 'flex-end'}}>
+          <div className="form-group" style={{ flexDirection: 'row', alignItems: 'center', gap: '10px' }}>
+            <input
+              type="checkbox"
+              name="active"
+              id="active"
+              checked={formData.active}
+              onChange={handleChange}
+            />
+            <label htmlFor="active" style={{ marginBottom: 0 }}>Product is Active</label>
+          </div>
+
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
             <button type="button" className="btn-cancel" onClick={() => navigate('/admin/products')}>
               Cancel
             </button>

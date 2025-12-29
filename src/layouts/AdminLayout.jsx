@@ -3,7 +3,6 @@ import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import logo from '../assets/logo.png';
 
-
 const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -21,7 +20,7 @@ const AdminLayout = () => {
     { path: '/admin/products', label: 'Product & Category', icon: '📦' },
     { path: '/admin/orders', label: 'Order Tracking', icon: '🛒' },
     { path: '/admin/lab-reports', label: 'Lab Report', icon: '🔬' },
-    { path: '/admin/history', label: 'History of Farmers Form', icon: '📋' }
+    { path: '/admin/history', label: 'Survey History', icon: '📋' }
   ];
 
   return (
@@ -29,7 +28,7 @@ const AdminLayout = () => {
       <aside className="sidebar">
         <div className="sidebar-logo">
           <img src={logo} alt="Logo" />
-          <h2>JIOJI GREEN INDIA</h2>
+          <span style={{ fontWeight: 700, fontSize: '18px' }}>JIOJI GREEN</span>
         </div>
 
         <ul className="sidebar-menu">
@@ -39,30 +38,32 @@ const AdminLayout = () => {
                 to={item.path}
                 className={location.pathname === item.path ? 'active' : ''}
               >
-                <span>{item.icon}</span>
-                {item.label}
+                <i style={{ fontStyle: 'normal', marginRight: '12px', fontSize: '20px' }}>{item.icon}</i>
+                <span>{item.label}</span>
               </Link>
             </li>
           ))}
         </ul>
 
-        <button className="logout-btn" onClick={handleLogout}>
-          Logout
-        </button>
+        <div style={{ marginTop: 'auto', padding: '20px 0' }}>
+          <button className="btn-primary" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)' }} onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       </aside>
 
       <main className="main-content">
         <div className="top-bar">
-          <h1 className="page-title">
+          <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--primary-dark)' }}>
             {menuItems.find(item => item.path === location.pathname)?.label || 'Dashboard'}
           </h1>
           <div className="user-info">
             <div className="user-avatar">
-              {user?.name?.charAt(0).toUpperCase() || 'U'}
+              {(user?.firstName || user?.email || 'A').charAt(0).toUpperCase()}
             </div>
             <div>
-              <div style={{fontWeight: 500}}>{user?.name || 'User'}</div>
-              <div style={{fontSize: '12px', color: '#666'}}>ID: {user?.id || '00000000'}</div>
+              <div style={{ fontWeight: 600 }}>{user?.firstName ? `${user.firstName} ${user.lastName || ''}` : (user?.email || 'Admin')}</div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>ID: {user?.userId || user?.employeeId || 'ADM-001'}</div>
             </div>
           </div>
         </div>
@@ -74,5 +75,6 @@ const AdminLayout = () => {
     </div>
   );
 };
+
 
 export default AdminLayout;

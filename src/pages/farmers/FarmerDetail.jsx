@@ -12,31 +12,31 @@ const FarmerDetail = () => {
     return <div className="loading"><div className="spinner"></div></div>;
   }
 
-  const farmerData = farmer || {
-    name: 'Ramesh Patil',
-    village: 'Molkhi',
-    phone: '9876543210',
-    email: 'ramesh@mail.com',
-    address: 'Village Molkhi, Maharashtra',
-    farmSize: '5 acres',
-    crops: 'Rice, Wheat',
-    survey: 'Completed',
-    lastVisit: '2024-03-15'
+  if (!farmer) return null;
+
+  const farmerData = {
+    name: `${farmer.firstName} ${farmer.lastName}`,
+    village: farmer.village || 'N/A',
+    phone: farmer.mobileNumber,
+    email: farmer.email,
+    address: farmer.village || 'N/A', // Using village as placeholder for address
+    survey: 'Completed', // Placeholder
+    lastVisit: 'N/A' // Placeholder
   };
 
   return (
     <div>
       <div className="table-container">
-        <div className="modal-header" style={{padding: '20px', borderBottom: '1px solid #eee'}}>
+        <div className="modal-header" style={{ padding: '20px', borderBottom: '1px solid #eee' }}>
           <h2>Farmer Details</h2>
           <button className="btn-secondary" onClick={() => navigate('/admin/farmers')}>Back</button>
         </div>
 
-        <div style={{padding: '30px'}}>
-          <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px'}}>
+        <div style={{ padding: '30px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
             <div>
-              <h3 style={{marginBottom: '20px', color: '#333'}}>Personal Information</h3>
-              <div style={{display: 'grid', gap: '15px'}}>
+              <h3 style={{ marginBottom: '20px', color: '#333' }}>Personal Information</h3>
+              <div style={{ display: 'grid', gap: '15px' }}>
                 <div>
                   <strong>Name:</strong>
                   <p>{farmerData.name}</p>
@@ -61,8 +61,8 @@ const FarmerDetail = () => {
             </div>
 
             <div>
-              <h3 style={{marginBottom: '20px', color: '#333'}}>Farm Information</h3>
-              <div style={{display: 'grid', gap: '15px'}}>
+              <h3 style={{ marginBottom: '20px', color: '#333' }}>Farm Information</h3>
+              <div style={{ display: 'grid', gap: '15px' }}>
                 <div>
                   <strong>Farm Size:</strong>
                   <p>{farmerData.farmSize}</p>
@@ -87,7 +87,7 @@ const FarmerDetail = () => {
             </div>
           </div>
 
-          <div style={{marginTop: '30px', display: 'flex', gap: '10px'}}>
+          <div style={{ marginTop: '30px', display: 'flex', gap: '10px' }}>
             <button className="btn-primary">Update Information</button>
             <button className="btn-secondary" onClick={() => navigate(`/admin/farmers/${id}/survey`)}>
               Fill Survey

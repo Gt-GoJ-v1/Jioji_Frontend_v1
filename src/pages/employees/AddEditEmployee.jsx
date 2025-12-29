@@ -7,13 +7,10 @@ const AddEditEmployee = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     employeeId: '',
-    surname: '',
     email: '',
-    phoneNo: '',
-    userType: '',
-    designation: '',
-    department: '',
-    role: ''
+    mobileNumber: '',
+    role: '',
+    password: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,7 +19,10 @@ const AddEditEmployee = () => {
     const loadEmployee = async () => {
       try {
         const data = await adminApi.getEmployeeById(id);
-        setFormData(data);
+        setFormData({
+          ...data,
+          password: '' // Don't load password
+        });
       } catch (err) {
         setError('Failed to load employee');
       }
@@ -45,11 +45,17 @@ const AddEditEmployee = () => {
     setLoading(true);
     setError('');
 
+    // Mapping for backend consistency
+    const payload = {
+      ...formData,
+      mobileNumber: parseInt(formData.mobileNumber)
+    };
+
     try {
       if (id) {
-        await adminApi.updateEmployee(id, formData);
+        await adminApi.updateEmployee(id, payload);
       } else {
-        await adminApi.createEmployee(formData);
+        await adminApi.createEmployee(payload);
       }
       navigate('/admin/employees');
     } catch (err) {
@@ -61,11 +67,11 @@ const AddEditEmployee = () => {
 
   return (
     <div className="table-container">
-      <div className="modal-header" style={{padding: '20px', borderBottom: '1px solid #eee'}}>
+      <div className="modal-header" style={{ padding: '20px', borderBottom: '1px solid #eee' }}>
         <h2>{id ? 'Edit Employee' : 'Add New Employee'}</h2>
       </div>
 
-      <div style={{padding: '20px'}}>
+      <div style={{ padding: '20px' }}>
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit}>
@@ -83,21 +89,19 @@ const AddEditEmployee = () => {
             </div>
 
             <div className="form-group">
-              <label>Surname</label>
-              <input
-                type="text"
-                name="surname"
-                value={formData.surname}
-                onChange={handleChange}
-                placeholder="Enter Surname"
-                required
-              />
+              <label>Role</label>
+              <select name="role" value={formData.role} onChange={handleChange} required>
+                <option value="">Select Role</option>
+                <option value="SURVEYOR">Surveyor</option>
+                <option value="LAB_TECHNICIAN">Lab Technician</option>
+                <option value="EMPLOYEE">General Employee</option>
+              </select>
             </div>
           </div>
 
           <div className="form-row">
             <div className="form-group">
-              <label>Email ID</label>
+              <label>Email Address</label>
               <input
                 type="email"
                 name="email"
@@ -109,78 +113,33 @@ const AddEditEmployee = () => {
             </div>
 
             <div className="form-group">
-              <label>Phone No.</label>
+              <label>Mobile Number</label>
               <input
                 type="tel"
-                name="phoneNo"
-                value={formData.phoneNo}
+                name="mobileNumber"
+                value={formData.mobileNumber}
                 onChange={handleChange}
-                placeholder="Enter Phone"
+                placeholder="Enter Mobile"
                 required
               />
             </div>
           </div>
 
-          <div className="form-row">
+          {!id && (
             <div className="form-group">
-              <label>User Type</label>
-              <select name="userType" value={formData.userType} onChange={handleChange} required>
-                <option value="">Select User Type</option>
-                <option value="Admin">Admin</option>
-                <option value="Manager">Manager</option>
-                <option value="Staff">Staff</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Designation</label>
+              <label>Password</label>
               <input
-                type="text"
-                name="designation"
-                value={formData.designation}
+                type="password"
+                name="password"
+                value={formData.password}
                 onChange={handleChange}
-                placeholder="Enter Designation"
-                required
+                placeholder="Enter Initial Password"
+                required={!id}
               />
             </div>
-          </div>
+          )}
 
-          <div className="form-row">
-            <div className="form-group">
-              <label>Department</label>
-              <input
-                type="text"
-                name="department"
-                value={formData.department}
-                onChange={handleChange}
-                placeholder="Enter Department"
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Role</label>
-              <select name="role" value={formData.role} onChange={handleChange} required>
-                <option value="">Select Role</option>
-                <option value="Administrator">Administrator</option>
-                <option value="Manager">Manager</option>
-                <option value="Employee">Employee</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Upload Image</label>
-            <div className="file-upload">
-              <p>📁 Upload</p>
-              <input type="file" accept="image/*" style={{display: 'none'}} id="imageUpload" />
-              <label htmlFor="imageUpload" style={{cursor: 'pointer', color: '#7B1FA2'}}>
-                Choose file or drag & drop here
-              </label>
-            </div>
-          </div>
-
-          <div style={{display: 'flex', gap: '10px', justifyContent: 'flex-end'}}>
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', marginTop: '20px' }}>
             <button type="button" className="btn-cancel" onClick={() => navigate('/admin/employees')}>
               Cancel
             </button>

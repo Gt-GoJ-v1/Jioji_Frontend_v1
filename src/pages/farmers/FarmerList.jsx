@@ -11,15 +11,11 @@ const FarmerList = () => {
     return <div className="loading"><div className="spinner"></div></div>;
   }
 
-  const farmerData = farmers || [
-    { id: 1, name: 'Ramesh Patil', village: 'Molkhi', phone: '9876543210', survey: 'Completed', status: 'Active' },
-    { id: 2, name: 'Anita Desai', village: 'Boro', phone: '9876543211', survey: 'Pending', status: 'Active' },
-    { id: 3, name: 'Suresh Kumar', village: 'Rammati', phone: '9876543212', survey: 'Completed', status: 'Active' }
-  ];
+  const farmerData = farmers?.content || [];
 
   const filteredFarmers = farmerData.filter(farmer =>
-    farmer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    farmer.village.toLowerCase().includes(searchTerm.toLowerCase())
+    (farmer.firstName + ' ' + farmer.lastName).toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (farmer.village || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -42,40 +38,42 @@ const FarmerList = () => {
         <table>
           <thead>
             <tr>
+              <th>User ID</th>
               <th>Name</th>
               <th>Village</th>
               <th>Phone</th>
-              <th>Survey Status</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filteredFarmers.map((farmer) => (
-              <tr key={farmer.id}>
-                <td>{farmer.name}</td>
-                <td>{farmer.village}</td>
-                <td>{farmer.phone}</td>
-                <td>
-                  <span className={`status-badge ${farmer.survey === 'Completed' ? 'delivered' : 'pending'}`}>
-                    {farmer.survey}
-                  </span>
-                </td>
-                <td>
-                  <span className="status-badge active">{farmer.status}</span>
-                </td>
-                <td>
-                  <div className="action-buttons">
-                    <Link to={`/admin/farmers/${farmer.id}`} className="btn-icon" title="View">
-                      👁️
-                    </Link>
-                    <Link to={`/admin/farmers/edit/${farmer.id}`} className="btn-icon" title="Edit">
-                      ✏️
-                    </Link>
-                  </div>
-                </td>
+            {filteredFarmers.length > 0 ? (
+              filteredFarmers.map((farmer) => (
+                <tr key={farmer.userId}>
+                  <td>FMR_{farmer.userId}</td>
+                  <td>{farmer.firstName} {farmer.lastName}</td>
+                  <td>{farmer.village || 'N/A'}</td>
+                  <td>{farmer.mobileNumber}</td>
+                  <td>
+                    <span className="status-badge active">Active</span>
+                  </td>
+                  <td>
+                    <div className="action-buttons">
+                      <Link to={`/admin/farmers/${farmer.userId}`} className="btn-icon" title="View">
+                        👁️
+                      </Link>
+                      <Link to={`/admin/farmers/edit/${farmer.userId}`} className="btn-icon" title="Edit">
+                        ✏️
+                      </Link>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6" style={{ textAlign: 'center', padding: '20px' }}>No farmers found</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>

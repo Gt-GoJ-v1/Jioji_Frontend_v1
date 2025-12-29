@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { authService } from '../../services/authService';
-import logo from '../../assets/logo.png';
-
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -30,7 +28,7 @@ const ForgotPassword = () => {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-logo">
-          <img src={logo} alt="Logo" />
+          <img src="/logo.png" alt="Logo" />
           <h2>Forget Password</h2>
           <p>Enter your email to reset password</p>
         </div>

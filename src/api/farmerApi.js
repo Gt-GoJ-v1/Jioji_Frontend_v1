@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || "http://localhost:8080") + "/api/v1/admin/users";
+const AUTH_API_URL = (import.meta.env.VITE_API_URL || "http://localhost:8080") + "/api/v1/auth";
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -18,7 +19,7 @@ export const farmerApi = {
   },
 
   getFarmerById: async (id) => {
-    const response = await fetch(`${API_BASE_URL}/farmers/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/${id}`, {
       headers: getAuthHeaders()
     });
     if (!response.ok) throw new Error('Failed to fetch farmer');
@@ -26,17 +27,17 @@ export const farmerApi = {
   },
 
   createFarmer: async (farmerData) => {
-    const response = await fetch(`${API_BASE_URL}/farmers`, {
+    const response = await fetch(`${AUTH_API_URL}/register`, {
       method: 'POST',
-      headers: getAuthHeaders(),
-      body: JSON.stringify(farmerData)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...farmerData, role: 'USER' })
     });
     if (!response.ok) throw new Error('Failed to create farmer');
     return response.json();
   },
 
   updateFarmer: async (id, farmerData) => {
-    const response = await fetch(`${API_BASE_URL}/farmers/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/${id}`, {
       method: 'PUT',
       headers: getAuthHeaders(),
       body: JSON.stringify(farmerData)
@@ -46,7 +47,7 @@ export const farmerApi = {
   },
 
   deleteFarmer: async (id) => {
-    const response = await fetch(`${API_BASE_URL}/farmers/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/${id}`, {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
@@ -55,7 +56,7 @@ export const farmerApi = {
   },
 
   getSurveyHistory: async (farmerId) => {
-    const response = await fetch(`${API_BASE_URL}/farmers/${farmerId}/surveys`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL || "http://localhost:8080"}/api/v1/survey?farmerId=${farmerId}`, {
       headers: getAuthHeaders()
     });
     if (!response.ok) throw new Error('Failed to fetch survey history');
