@@ -479,3 +479,141 @@ tbody tr:hover {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* BACKGROUND GRADIENT */
+.login-bg-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #d246d2 0%, #ffffff 50%, #32ad32 100%);
+  padding: 20px;
+}
+
+/* WHITE CARD */
+.login-white-card {
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.login-logo-img {
+  width: 80px;
+  margin-bottom: 15px;
+}
+
+.brand-name {
+  font-family: 'Times New Roman', serif; /* Matching the serif font in image */
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.portal-sub {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+/* INPUT STYLING */
+.input-field-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-field-group input {
+  width: 100%;
+  padding: 12px 40px 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.input-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  cursor: pointer;
+}
+
+/* OPTIONS & TERMS */
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 15px;
+  color: #666;
+}
+
+.forgot-link {
+  color: #7b1fa2;
+  text-decoration: none;
+}
+
+.terms-text {
+  font-size: 11px;
+  color: #999;
+  margin-bottom: 25px;
+  line-height: 1.4;
+}
+
+/* LOGIN BUTTON */
+.login-submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #7b1fa2; /* Purple button */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.login-submit-btn:hover {
+  opacity: 0.9;
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 13px;
+  margin-bottom: 15px;
+}
+
+
+.forgot-helper-text {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Ensure branding text matches */
+.brand-name {
+  font-family: 'Times New Roman', serif;
+  font-size: 22px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+/* Success message styling */
+.success-text {
+  background: #e8f5e9;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #c8e6c9;
+}

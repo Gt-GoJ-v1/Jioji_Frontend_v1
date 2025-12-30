@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/Jioji_logo.png';
 import { useAuth } from '../../context/AuthContext';
+import '../auth/Login.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });

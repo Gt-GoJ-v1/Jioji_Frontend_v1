@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { authService } from '../../services/authService';
+import logo from '../../assets/Jioji_logo.png'; // Use local logo for consistency
+import '../auth/Login.css';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -15,6 +17,7 @@ const ForgotPassword = () => {
     setLoading(true);
 
     try {
+      // API integration remains untouched
       await authService.forgotPassword(email);
       setMessage('Password reset link has been sent to your email');
     } catch (err) {
@@ -25,36 +28,40 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-logo">
-          <img src="/logo.png" alt="Logo" />
-          <h2>Forget Password</h2>
-          <p>Enter your email to reset password</p>
+    <div className="login-bg-container"> {/* Matches Login Page background */}
+      <div className="login-white-card"> {/* Matches Login Page card */}
+        <div className="login-header">
+          <img src={logo} alt="JIOJI GREEN INDIA" className="login-logo-img" />
+          <h1 className="brand-name">Farm Products & Seeds</h1>
+          <h2 className="portal-sub">Admin Portal</h2>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
-        {message && <div className="success-message">{message}</div>}
+        <p className="forgot-helper-text">
+          Enter your registered email or employee ID/Number
+        </p>
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Email Address</label>
+        {error && <div className="error-text">{error}</div>}
+        {message && <div className="success-text" style={{ color: '#2ecc71', fontSize: '13px', marginBottom: '15px' }}>{message}</div>}
+
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="input-field-group">
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder="Enter Mail ID"
               required
+              className="login-input"
             />
           </div>
 
-          <button type="submit" className="btn-primary" disabled={loading}>
+          <button type="submit" className="login-submit-btn" disabled={loading}>
             {loading ? 'Sending...' : 'Send Reset Link'}
           </button>
         </form>
 
-        <div className="auth-link">
-          Remember password? <Link to="/login">Back to Login</Link>
+        <div className="auth-link-footer" style={{ marginTop: '15px', fontSize: '12px' }}>
+          Remember password? <Link to="/admin-login" className="forgot-link">Back to Login</Link>
         </div>
       </div>
     </div>
