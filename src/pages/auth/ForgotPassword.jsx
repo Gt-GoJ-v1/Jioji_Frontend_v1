@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { authService } from '../../services/authService';
-import logo from '../../assets/Jioji_logo.png'; // Use local logo for consistency
+import logo from '../../assets/Jioji_logo.png'; 
 import '../auth/Login.css';
 
 const ForgotPassword = () => {
@@ -17,7 +17,7 @@ const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      // API integration remains untouched
+      
       await authService.forgotPassword(email);
       setMessage('Password reset link has been sent to your email');
     } catch (err) {
@@ -28,8 +28,8 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="login-bg-container"> {/* Matches Login Page background */}
-      <div className="login-white-card"> {/* Matches Login Page card */}
+    <div className="login-bg-container">
+      <div className="login-white-card"> 
         <div className="login-header">
           <img src={logo} alt="JIOJI GREEN INDIA" className="login-logo-img" />
           <h1 className="brand-name">Farm Products & Seeds</h1>
