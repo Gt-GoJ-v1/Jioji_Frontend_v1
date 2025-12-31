@@ -1,0 +1,111 @@
+@import url("https://fonts.googleapis.com/css2?family=Montaga&family=Montserrat:wght@400;500&display=swap");
+
+/* PAGE CONTAINER */
+.auth-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(
+    to bottom,
+    #cf32da 0%,
+    #ffffff 50%,
+    #24ac39 100%
+  );
+  font-family: "Montserrat", sans-serif;
+}
+
+/* CARD */
+.auth-card {
+  width: 360px;
+  background: #ffffff;
+  padding: 36px 30px;
+  border-radius: 10px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* LOGO SECTION */
+.auth-logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.auth-logo img {
+  width: 119px;
+  height: 105px;
+  margin-bottom: 10px;
+}
+
+/* TITLE */
+.auth-logo h2 {
+  font-family: "Montaga", serif;
+  font-weight: 400;
+  font-size: 20px;
+  margin: 0;
+}
+
+/* SUB TITLE */
+.auth-logo p {
+  font-size: 14px;
+  margin-top: 6px;
+  color: #444;
+}
+
+/* ERROR */
+.error-message {
+  background: #ffe6e6;
+  color: #d32f2f;
+  font-size: 13px;
+  padding: 8px;
+  border-radius: 5px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+/* FORM GROUP */
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  font-size: 13px;
+  margin-bottom: 6px;
+  display: block;
+  color: #333;
+}
+
+/* INPUT */
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 6px;
+  border: 1px solid #cfcfcf;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: #7b1fa2;
+}
+
+/* BUTTON */
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: #7b1fa2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-primary:hover {
+  background: #6a1b9a;
+}

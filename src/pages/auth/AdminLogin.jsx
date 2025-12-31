@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/Jioji_logo.png';
 import { useAuth } from '../../context/AuthContext';
+import { User, Eye, EyeOff } from 'lucide-react';
 
 const AdminLogin = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -27,26 +29,56 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-logo">
-          <img src={logo} alt="Logo" />
-          <h2>Admin Login</h2>
-          <p>Welcome back! Please login to your account</p>
+    <div className="login-bg-container">
+      <div className="login-white-card">
+        <div className="login-header">
+          <img src={logo} alt="JIOJI GREEN INDIA" className="login-logo-img" />
+          <h1 className="brand-name">Farm Products & Seeds</h1>
+          <h2 className="portal-sub">Admin Portal</h2>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="error-text">{error}</div>}
 
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Email Address</label>
-            <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" required />
+        <form onSubmit={handleSubmit} className="login-form">
+          <div className="input-field-group">
+            <input 
+              type="email" 
+              name="email" 
+              placeholder="Username" 
+              value={formData.email} 
+              onChange={handleChange} 
+              required 
+            />
+            <User size={18} className="input-icon" />
           </div>
-          <div className="form-group">
-            <label>Password</label>
-            <input type="password" name="password" value={formData.password} onChange={handleChange} placeholder="Enter your password" required />
+
+          <div className="input-field-group">
+            <input 
+              type={showPassword ? "text" : "password"} 
+              name="password" 
+              placeholder="Password" 
+              value={formData.password} 
+              onChange={handleChange} 
+              required 
+            />
+            <div className="input-icon" onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </div>
           </div>
-          <button type="submit" className="btn-primary" disabled={loading}>
+
+          <div className="login-options">
+            <label className="remember-me">
+              <input type="checkbox" /> Remember me
+            </label>
+            {/* UPDATED LINK TO FORGOT PASSWORD PAGE */}
+            <Link to="/forgot-password" size={18} className="forgot-link">Forget Password?</Link>
+          </div>
+
+          <p className="terms-text">
+            *By clicking register free, I agree to the T&C and Privacy Policy
+          </p>
+
+          <button type="submit" className="login-submit-btn" disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>

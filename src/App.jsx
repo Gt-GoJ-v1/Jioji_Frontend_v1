@@ -67,7 +67,7 @@ function App() {
       />
 
       {/* Default */}
-      <Route path="*" element={<Login />} />
+      <Route path="*" element={<AdminLogin />} />
     </Routes>
   );
 }
